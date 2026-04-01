@@ -1,26 +1,74 @@
 @import "tailwindcss";
 
+/* Light mode (default) */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-background: #fafafa;
+  --color-foreground: #171717;
+  --color-accent: #6366f1;
+  --color-accent-light: #4f46e5;
+  --color-card-bg: #ffffff;
+  --color-card-border: #e5e7eb;
+  --color-muted: #6b7280;
+  --color-nav-bg: rgba(250, 250, 250, 0.8);
+  --color-mobile-bg: rgba(250, 250, 250, 0.95);
+}
+
+/* Dark mode */
+.dark {
+  --color-background: #0a0a0a;
+  --color-foreground: #ededed;
+  --color-accent: #6366f1;
+  --color-accent-light: #818cf8;
+  --color-card-bg: #111111;
+  --color-card-border: #1e1e1e;
+  --color-muted: #a1a1aa;
+  --color-nav-bg: rgba(10, 10, 10, 0.8);
+  --color-mobile-bg: rgba(10, 10, 10, 0.95);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: initial;
+  --color-foreground: initial;
+  --color-accent: initial;
+  --color-accent-light: initial;
+  --color-card-bg: initial;
+  --color-card-border: initial;
+  --color-muted: initial;
+  --color-nav-bg: initial;
+  --color-mobile-bg: initial;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: white;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-card-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
 }
