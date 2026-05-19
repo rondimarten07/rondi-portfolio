@@ -1,12 +1,13 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { AnimatePresence, motion, useInView } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { FiExternalLink, FiGithub } from "react-icons/fi";
+import { FiExternalLink, FiGithub, FiX } from "react-icons/fi";
 
 const categories = ["All", "Mobile", "Web", "Design", "Game"] as const;
 type Category = (typeof categories)[number];
+type Project = (typeof projects)[number];
 
 const projects = [
   {
@@ -115,8 +116,22 @@ export default function Projects() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [filter, setFilter] = useState<Category>("All");
+  const [selected, setSelected] = useState<Project | null>(null);
 
   const filtered = filter === "All" ? projects : projects.filter((p) => p.category === filter);
+
+  useEffect(() => {
+    if (!selected) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelected(null);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [selected]);
 
   return (
     <section id="projects" className="relative py-24 px-6 overflow-hidden" ref={ref}>
@@ -174,7 +189,8 @@ export default function Projects() {
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.4, delay: 0.1 + i * 0.08 }}
-              className="group rounded-xl border border-card-border bg-card-bg/30 overflow-hidden hover:border-accent-light/30 transition-all duration-300 hover:-translate-y-1"
+              onClick={() => setSelected(project)}
+              className="group rounded-xl border border-card-border bg-card-bg/30 overflow-hidden hover:border-accent-light/30 transition-all duration-300 hover:-translate-y-1 cursor-pointer"
             >
               {/* Image */}
               <div className="relative h-48 overflow-hidden">
@@ -199,6 +215,7 @@ export default function Projects() {
                       href={project.link}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
                       className="p-1.5 rounded-lg text-muted hover:text-accent-light transition-colors"
                     >
                       {project.github ? <FiGithub size={16} /> : <FiExternalLink size={16} />}
@@ -223,6 +240,90 @@ export default function Projects() {
           ))}
         </div>
       </div>
+
+      {/* Detail modal */}
+      <AnimatePresence>
+        {selected && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setSelected(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl border border-card-border bg-background shadow-2xl"
+            >
+              {/* Close button */}
+              <button
+                onClick={() => setSelected(null)}
+                aria-label="Close"
+                className="absolute top-4 right-4 z-10 p-2 rounded-lg bg-black/40 backdrop-blur-sm text-white/80 hover:bg-black/60 hover:text-white transition-colors cursor-pointer"
+              >
+                <FiX size={18} />
+              </button>
+
+              {/* Image */}
+              <div className="relative w-full h-64 md:h-80 overflow-hidden rounded-t-2xl">
+                <Image
+                  src={selected.image}
+                  alt={selected.title}
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+                <span className="absolute top-4 left-4 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full bg-black/50 text-white/90 backdrop-blur-sm border border-white/10">
+                  {selected.category}
+                </span>
+              </div>
+
+              {/* Content */}
+              <div className="p-6 md:p-8">
+                <div className="flex items-start justify-between gap-4 mb-4">
+                  <h4 className="text-2xl md:text-3xl font-bold">{selected.title}</h4>
+                  {selected.link && (
+                    <a
+                      href={selected.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-medium hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-shadow"
+                    >
+                      {selected.github ? <FiGithub size={16} /> : <FiExternalLink size={16} />}
+                      {selected.github ? "View on GitHub" : "Open Project"}
+                    </a>
+                  )}
+                </div>
+
+                <p className="text-base text-muted leading-relaxed mb-6">
+                  {selected.desc}
+                </p>
+
+                <div>
+                  <h5 className="text-xs font-mono text-accent-light mb-3 tracking-wider uppercase">
+                    Tech Stack
+                  </h5>
+                  <div className="flex flex-wrap gap-2">
+                    {selected.tech.map((t) => (
+                      <span
+                        key={t}
+                        className="text-xs font-medium px-3 py-1 rounded-full bg-accent-light/10 text-accent-light border border-accent-light/20"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
