@@ -60,6 +60,55 @@ const projects = [
     category: "Game" as Category,
     link: "https://arleigh.itch.io/trash-force",
   },
+  {
+    title: "BTN Logmind",
+    desc: "Internal data management platform for Bank BTN unifying ALM, SBU, Data Parameter, Blast Campaign, Patching Data, Ticketing, and a customer-portfolio chatbot in one console. Contributed end-to-end to the ALM and Data Parameter modules.",
+    image: "/projects/bank-btn.png",
+    tech: ["Web", "Banking", "Chatbot", "Internal Platform"],
+    category: "Web" as Category,
+  },
+  {
+    title: "Rowawi Clinic System",
+    desc: "End-to-end clinic ERP for Klinik Rowawi, a leading Bandung specialist clinic in dermatology, aesthetic dermatology, and venereology. Handles reservations, billing, pharmacy, cashier, patient deposits, master data, and satisfaction surveys in one platform.",
+    image: "/projects/sim-rowawi.png",
+    tech: ["Web", "Healthcare ERP", "Reservation", "Billing"],
+    category: "Web" as Category,
+  },
+  {
+    title: "CafeMatch",
+    desc: "Cafe discovery platform — explore Bandung's coffee scene with a map-based search, vibe-tagged filters (work, meeting, brunch, dates), accessibility filters, plus social features for check-ins and interactions.",
+    image: "/projects/cafe-match.png",
+    tech: ["Web", "Geolocation", "Social", "Check-in"],
+    category: "Web" as Category,
+  },
+  {
+    title: "Engine OTP",
+    desc: "WhatsApp-based OTP gateway distributing one-time passwords to downstream products via per-app API keys. Includes delivery logs, Swagger-documented endpoints, and live connection status monitoring.",
+    image: "/projects/engine-otp.png",
+    tech: ["Backend", "WhatsApp API", "Swagger", "Multi-tenant"],
+    category: "Web" as Category,
+  },
+  {
+    title: "ESS Komatsu",
+    desc: "Komatsu Indonesia's Employee Self-Service portal — a unified HR & operations platform covering attendance, leave, medical claims, asset management, room booking, invoices, travel requests, and ICT support.",
+    image: "/projects/ess-komatsu.png",
+    tech: ["Web", "ERP", "HRIS", "Enterprise"],
+    category: "Web" as Category,
+  },
+  {
+    title: "Sheerly",
+    desc: "Finance dashboard reconciling marketplace revenue for online sellers — tracks gross sales, platform fees, refunds, net income, and cash projections, with deep CoA breakdowns for TikTok Shop and Shopee.",
+    image: "/projects/sheerly.png",
+    tech: ["Web", "Finance", "Shopee API", "TikTok API"],
+    category: "Web" as Category,
+  },
+  {
+    title: "TelU-X",
+    desc: "Telkom University's flagship e-learning platform — a Udemy-style course marketplace with 80+ courses, 2,500+ active students, and 24/7 learning access through structured curricula led by university instructors.",
+    image: "/projects/telux.png",
+    tech: ["Web", "E-Learning", "EdTech"],
+    category: "Web" as Category,
+  },
 ];
 
 export default function Projects() {
@@ -145,14 +194,16 @@ export default function Projects() {
               <div className="p-5">
                 <div className="flex items-center justify-between mb-2">
                   <h4 className="font-bold text-base">{project.title}</h4>
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-1.5 rounded-lg text-muted hover:text-accent-light transition-colors"
-                  >
-                    {project.github ? <FiGithub size={16} /> : <FiExternalLink size={16} />}
-                  </a>
+                  {project.link && (
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-1.5 rounded-lg text-muted hover:text-accent-light transition-colors"
+                    >
+                      {project.github ? <FiGithub size={16} /> : <FiExternalLink size={16} />}
+                    </a>
+                  )}
                 </div>
                 <p className="text-sm text-muted leading-relaxed mb-4 line-clamp-3">
                   {project.desc}
