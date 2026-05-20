@@ -3,6 +3,8 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import { FiBookOpen, FiAward } from "react-icons/fi";
+import SectionHeader from "./SectionHeader";
+import { GridPattern } from "./Shapes";
 
 const educations = [
   {
@@ -36,77 +38,51 @@ export default function Education() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="education" className="relative py-24 px-6 overflow-hidden" ref={ref}>
-      {/* Background decorations */}
-      <div className="absolute top-10 right-0 w-72 h-72 bg-purple-500/5 rounded-full blur-[100px]" />
-      <div className="absolute bottom-10 left-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-[80px]" />
-      <div
-        className="absolute inset-0 opacity-[0.015]"
-        style={{
-          backgroundImage: "radial-gradient(var(--color-foreground) 1px, transparent 1px)",
-          backgroundSize: "32px 32px",
-        }}
-      />
-
+    <section id="education" className="relative py-20 md:py-28 px-6 overflow-hidden" ref={ref}>
+      <GridPattern />
       <div className="relative z-10 max-w-6xl mx-auto">
-        {/* Section header with icon */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="flex items-center gap-4 mb-12"
-        >
-          <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500/10 to-indigo-500/10 border border-accent-light/20">
-            <FiBookOpen size={24} className="text-accent-light" />
-          </div>
-          <div>
-            <h2 className="text-sm font-mono text-accent-light mb-1 tracking-wider uppercase">
-              Education
-            </h2>
-            <h3 className="text-3xl md:text-4xl font-bold">
-              Where I&apos;ve{" "}
-              <span className="bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
-                studied
-              </span>
-            </h3>
-          </div>
-        </motion.div>
+        <SectionHeader
+          eyebrow="Education"
+          title="Where I've studied"
+          icon={<FiBookOpen size={14} />}
+          isInView={isInView}
+        />
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-5">
           {educations.map((edu, i) => (
             <motion.div
               key={edu.school}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.2 + i * 0.15 }}
-              className="relative p-6 rounded-xl border border-card-border bg-card-bg/30 hover:border-accent-light/20 transition-all duration-300 group"
+              transition={{ duration: 0.5, delay: 0.15 + i * 0.1 }}
+              className="p-6 rounded-xl border border-card-border bg-card-bg/40 hover:bg-card-bg/60 transition-colors"
             >
-              {/* Top accent bar */}
-              <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-accent-light/30 to-transparent" />
-
-              <div className="flex items-start justify-between gap-3 mb-4">
-                <div>
-                  <h4 className="text-lg font-bold mb-1">{edu.school}</h4>
-                  <p className="text-accent-light font-medium text-sm">{edu.degree}</p>
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <div className="min-w-0">
+                  <h4 className="text-base md:text-lg font-semibold text-foreground mb-1">
+                    {edu.school}
+                  </h4>
+                  <p className="text-accent-light text-sm font-medium">
+                    {edu.degree}
+                  </p>
                 </div>
-                <span className="font-mono text-xs px-3 py-1.5 rounded-lg bg-card-bg border border-card-border text-muted whitespace-nowrap">
+                <span className="font-mono text-[11px] text-muted whitespace-nowrap">
                   {edu.period}
                 </span>
               </div>
 
-              <p className="text-xs text-muted/60 mb-4">{edu.location}</p>
+              <p className="text-[11px] text-muted/60 mb-4">{edu.location}</p>
 
-              {/* GPA & Honor badges */}
               {(edu.gpa || edu.honor) && (
                 <div className="flex flex-wrap gap-2 mb-4">
                   {edu.gpa && (
-                    <span className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                      GPA: {edu.gpa}
+                    <span className="inline-flex items-center text-[11px] font-medium px-2.5 py-1 rounded-full bg-card-bg border border-card-border text-muted">
+                      GPA {edu.gpa}
                     </span>
                   )}
                   {edu.honor && (
-                    <span className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
-                      <FiAward size={12} />
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20">
+                      <FiAward size={11} />
                       {edu.honor}
                     </span>
                   )}
@@ -117,10 +93,10 @@ export default function Education() {
                 {edu.highlights.map((point, j) => (
                   <li
                     key={j}
-                    className="text-sm text-muted flex items-start gap-3"
+                    className="text-sm text-muted leading-relaxed flex items-start gap-2.5"
                   >
-                    <span className="mt-1.5 shrink-0 w-1.5 h-1.5 rounded-full bg-accent-light/60" />
-                    {point}
+                    <span className="mt-2 shrink-0 w-1 h-1 rounded-full bg-accent-light/60" />
+                    <span>{point}</span>
                   </li>
                 ))}
               </ul>

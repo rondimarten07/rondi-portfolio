@@ -1,158 +1,220 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { FiGithub, FiLinkedin, FiMail, FiMapPin } from "react-icons/fi";
+import { motion, useInView, useMotionValue, useTransform, animate } from "framer-motion";
+import { useEffect, useRef } from "react";
+import {
+  FiGithub,
+  FiLinkedin,
+  FiMail,
+  FiMapPin,
+  FiArrowDown,
+  FiZap,
+} from "react-icons/fi";
+
+const socials = [
+  { icon: <FiGithub size={18} />, href: "https://github.com/rondimarten07", label: "GitHub" },
+  { icon: <FiLinkedin size={18} />, href: "https://www.linkedin.com/in/rondi99/", label: "LinkedIn" },
+  { icon: <FiMail size={18} />, href: "mailto:rondimarten@gmail.com", label: "Email" },
+];
+
+const stats = [
+  { value: 3, suffix: "+", label: "Years experience" },
+  { value: 13, suffix: "+", label: "Projects shipped" },
+  { value: 6, suffix: "", label: "Awards & recognitions" },
+];
+
+function Counter({ to, suffix }: { to: number; suffix: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true });
+  const value = useMotionValue(0);
+  const rounded = useTransform(value, (v) => Math.round(v));
+
+  useEffect(() => {
+    if (!inView) return;
+    const controls = animate(value, to, { duration: 1.6, ease: "easeOut" });
+    return () => controls.stop();
+  }, [inView, to, value]);
+
+  useEffect(() => {
+    return rounded.on("change", (v) => {
+      if (ref.current) ref.current.textContent = `${v}${suffix}`;
+    });
+  }, [rounded, suffix]);
+
+  return <span ref={ref}>0{suffix}</span>;
+}
 
 export default function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 pb-16"
     >
-      {/* Background gradient orbs */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-indigo-500/15 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-purple-500/15 rounded-full blur-[120px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-400/5 rounded-full blur-[150px]" />
-      </div>
-
-      {/* Grid pattern */}
+      {/* Animated dot grid background */}
       <div
-        className="absolute inset-0 opacity-[0.03]"
+        className="absolute inset-0 opacity-[0.08] dark:opacity-[0.12]"
         style={{
           backgroundImage:
-            "linear-gradient(var(--color-foreground) 1px, transparent 1px), linear-gradient(90deg, var(--color-foreground) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
+            "radial-gradient(var(--color-foreground) 1px, transparent 1px)",
+          backgroundSize: "32px 32px",
+          maskImage:
+            "radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 75%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 75%)",
         }}
       />
 
-      {/* Floating dots decoration */}
-      <div className="absolute top-20 right-20 w-2 h-2 rounded-full bg-indigo-400/30 animate-pulse" />
-      <div className="absolute top-40 right-40 w-1.5 h-1.5 rounded-full bg-purple-400/20 animate-pulse delay-500" />
-      <div className="absolute bottom-40 left-20 w-2 h-2 rounded-full bg-purple-400/30 animate-pulse delay-700" />
-      <div className="absolute bottom-60 left-40 w-1 h-1 rounded-full bg-indigo-400/20 animate-pulse delay-300" />
-
-      {/* Corner accent lines */}
-      <div className="absolute top-0 right-0 w-px h-40 bg-gradient-to-b from-indigo-500/20 to-transparent" />
-      <div className="absolute top-0 right-0 w-40 h-px bg-gradient-to-l from-indigo-500/20 to-transparent" />
-      <div className="absolute bottom-0 left-0 w-px h-40 bg-gradient-to-t from-purple-500/20 to-transparent" />
-      <div className="absolute bottom-0 left-0 w-40 h-px bg-gradient-to-r from-purple-500/20 to-transparent" />
-
-      <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
+      {/* Animated glow orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          animate={{
+            x: [0, 60, 0],
+            y: [0, -40, 0],
+          }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-indigo-500/15 rounded-full blur-[120px]"
+        />
+        <motion.div
+          animate={{
+            x: [0, -50, 0],
+            y: [0, 50, 0],
+          }}
+          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] bg-purple-500/15 rounded-full blur-[120px]"
+        />
+      </div>
+
+      <div className="relative z-10 max-w-4xl mx-auto px-6 w-full">
+        {/* Status pills */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-card-border bg-card-bg/50 text-sm text-muted mb-8"
+          transition={{ duration: 0.5 }}
+          className="flex flex-wrap items-center gap-2 mb-8"
         >
-          <FiMapPin className="text-accent-light" />
-          Bandung, West Java, Indonesia
+          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-card-border bg-card-bg/60 backdrop-blur-sm text-xs text-muted">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+            </span>
+            <FiMapPin size={12} />
+            Bandung, Indonesia
+          </span>
+          <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-500/20 bg-indigo-500/5 backdrop-blur-sm text-xs text-accent-light">
+            <FiZap size={12} />
+            Open to opportunities
+          </span>
         </motion.div>
 
+        {/* Headline */}
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="text-5xl md:text-7xl font-bold tracking-tight mb-6"
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-5xl md:text-7xl font-semibold tracking-tight leading-[1.05] mb-6"
         >
           Hi, I&apos;m{" "}
-          <span className="bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
-            Rondi
+          <span className="relative inline-block">
+            <span className="absolute -inset-1 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 blur-xl rounded-lg" />
+            <span className="relative bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
+              Rondi
+            </span>
           </span>
+          .
+          <br />
+          <span className="text-muted">Mobile Developer.</span>
         </motion.h1>
 
+        {/* Lead */}
         <motion.p
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-xl md:text-2xl text-muted max-w-2xl mx-auto mb-4"
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-lg md:text-xl text-muted max-w-2xl leading-relaxed mb-10"
         >
-          Mid-Level Mobile Developer
+          I build mobile apps that combine clean architecture with thoughtful
+          UX. 3+ years shipping Android & cross-platform products in production.
         </motion.p>
 
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-base text-muted/70 max-w-xl mx-auto mb-10 leading-relaxed"
-        >
-          3+ years of experience building mobile apps that combine strong
-          functionality with great user experience. Passionate about clean
-          architecture and performance optimization.
-        </motion.p>
-
+        {/* CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="flex items-center justify-center gap-4 mb-12"
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="flex flex-wrap items-center gap-3 mb-12"
         >
           <a
             href="#contact"
-            className="px-6 py-3 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium hover:opacity-90 transition-opacity"
+            className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-medium hover:shadow-[0_8px_24px_rgba(99,102,241,0.45)] transition-shadow"
           >
-            Get in Touch
+            Get in touch
+            <span className="inline-block transition-transform group-hover:translate-x-0.5">
+              →
+            </span>
           </a>
           <a
-            href="#experience"
-            className="px-6 py-3 rounded-lg border border-card-border text-muted hover:text-foreground hover:border-muted transition-all"
+            href="#projects"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-card-border text-foreground text-sm font-medium hover:bg-card-bg/60 transition-colors"
           >
-            View My Work
+            View projects
           </a>
         </motion.div>
 
+        {/* Stats */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
-          className="flex items-center justify-center gap-6"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="flex flex-wrap items-center gap-8 md:gap-12 mb-10"
         >
-          {[
-            {
-              icon: <FiGithub size={20} />,
-              href: "https://github.com/rondimarten07",
-              label: "GitHub",
-            },
-            {
-              icon: <FiLinkedin size={20} />,
-              href: "https://www.linkedin.com/in/rondi99/",
-              label: "LinkedIn",
-            },
-            {
-              icon: <FiMail size={20} />,
-              href: "mailto:rondimarten@gmail.com",
-              label: "Email",
-            },
-          ].map((social) => (
-            <a
-              key={social.label}
-              href={social.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-3 rounded-lg border border-card-border text-muted hover:text-accent-light hover:border-accent-light/50 transition-all duration-200"
-              aria-label={social.label}
-            >
-              {social.icon}
-            </a>
+          {stats.map((stat) => (
+            <div key={stat.label} className="flex flex-col">
+              <span className="text-3xl md:text-4xl font-semibold text-foreground font-mono tabular-nums">
+                <Counter to={stat.value} suffix={stat.suffix} />
+              </span>
+              <span className="text-xs text-muted mt-1">{stat.label}</span>
+            </div>
           ))}
         </motion.div>
 
-        {/* Scroll indicator */}
+        {/* Socials */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="flex items-center gap-2"
         >
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-            className="w-5 h-8 border-2 border-muted/30 rounded-full flex items-start justify-center p-1"
-          >
-            <div className="w-1 h-2 bg-muted/50 rounded-full" />
-          </motion.div>
+          {socials.map((s) => (
+            <a
+              key={s.label}
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={s.label}
+              className="p-2.5 rounded-lg border border-card-border text-muted hover:text-accent-light hover:border-accent-light/40 hover:-translate-y-0.5 transition-all"
+            >
+              {s.icon}
+            </a>
+          ))}
         </motion.div>
       </div>
+
+      {/* Scroll indicator */}
+      <motion.a
+        href="#about"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-muted/60 hover:text-accent-light transition-colors"
+        aria-label="Scroll down"
+      >
+        <motion.div
+          animate={{ y: [0, 6, 0] }}
+          transition={{ repeat: Infinity, duration: 1.8 }}
+        >
+          <FiArrowDown size={20} />
+        </motion.div>
+      </motion.a>
     </section>
   );
 }

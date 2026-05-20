@@ -1,28 +1,30 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { FiCode, FiSmartphone, FiServer, FiAward } from "react-icons/fi";
+import { FiCode, FiSmartphone, FiServer, FiAward, FiUser } from "react-icons/fi";
+import SectionHeader from "./SectionHeader";
+import TechMarquee from "./TechMarquee";
+import { DotPattern, FloatingShapes } from "./Shapes";
 
 const highlights = [
   {
-    icon: <FiSmartphone size={24} />,
+    icon: <FiSmartphone size={20} />,
     title: "Mobile Development",
     desc: "Android (Kotlin, Jetpack Compose) & Flutter specialist",
   },
   {
-    icon: <FiCode size={24} />,
+    icon: <FiCode size={20} />,
     title: "Clean Architecture",
     desc: "MVVM, BLoC, and scalable app architectures",
   },
   {
-    icon: <FiServer size={24} />,
+    icon: <FiServer size={20} />,
     title: "Fullstack Capable",
     desc: "Backend API design, REST integration & optimization",
   },
   {
-    icon: <FiAward size={24} />,
+    icon: <FiAward size={20} />,
     title: "Award Winner",
     desc: "Hackathon finalist & Bangkit Academy graduate",
   },
@@ -33,84 +35,84 @@ export default function About() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="about" className="relative py-24 px-6 overflow-hidden" ref={ref}>
-      {/* Background decorations */}
-      <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-500/5 rounded-full blur-[100px]" />
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/5 rounded-full blur-[80px]" />
-      <div
-        className="absolute inset-0 opacity-[0.015]"
-        style={{
-          backgroundImage: "radial-gradient(var(--color-foreground) 1px, transparent 1px)",
-          backgroundSize: "24px 24px",
-        }}
-      />
-
+    <section id="about" className="relative py-20 md:py-28 px-6 overflow-hidden" ref={ref}>
+      <DotPattern />
+      <FloatingShapes />
       <div className="relative z-10 max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-sm font-mono text-accent-light mb-2 tracking-wider uppercase">
-            About Me
-          </h2>
-          <h3 className="text-3xl md:text-4xl font-bold mb-6">
-            Turning ideas into{" "}
-            <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-              polished apps
-            </span>
-          </h3>
-        </motion.div>
+        <SectionHeader
+          eyebrow="About"
+          title="Turning ideas into polished apps"
+          icon={<FiUser size={14} />}
+          isInView={isInView}
+        />
 
-        <div className="grid md:grid-cols-2 gap-12 items-start">
+        <div className="grid md:grid-cols-5 gap-10 md:gap-12 items-start">
+          {/* Copy */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className="md:col-span-3 space-y-4 text-muted leading-relaxed"
           >
-            <p className="text-muted leading-relaxed mb-4">
-              I&apos;m a Mid-Level Mobile Developer with over 3 years of experience
-              designing and developing mobile applications that combine strong
-              functionality with great user experience.
+            <p>
+              I&apos;m a Mid-Level Mobile Developer with over 3 years of
+              experience designing and developing applications that combine
+              strong functionality with great user experience.
             </p>
-            <p className="text-muted leading-relaxed mb-4">
+            <p>
               I enjoy turning ideas into polished features, building efficient
-              architectures, and optimizing apps for performance and scalability.
-              I stay updated with modern mobile technologies and engineering
-              trends.
+              architectures, and optimizing apps for performance and
+              scalability — staying close to modern mobile engineering trends.
             </p>
-            <p className="text-muted leading-relaxed">
-              Graduated <span className="text-foreground font-medium">Cum Laude</span> from
-              Universitas Teknologi Bandung with a Bachelor of Informatics
-              Engineering (GPA: 3.72/4.00). My goal is always to deliver
-              solutions that meet business needs while creating meaningful value
-              for users.
+            <p>
+              Graduated{" "}
+              <span className="text-foreground font-medium">Cum Laude</span>{" "}
+              from Universitas Teknologi Bandung with a Bachelor of Informatics
+              Engineering (GPA 3.72/4.00). My goal is always to deliver
+              solutions that meet business needs while creating meaningful
+              value for users.
             </p>
           </motion.div>
 
+          {/* Highlights */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="grid grid-cols-2 gap-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.25 }}
+            className="md:col-span-2 grid grid-cols-2 gap-3"
           >
             {highlights.map((item, i) => (
               <motion.div
                 key={item.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.4, delay: 0.4 + i * 0.1 }}
-                className="p-5 rounded-xl border border-card-border bg-card-bg/50 hover:border-accent-light/30 transition-all duration-300 group"
+                transition={{ duration: 0.4, delay: 0.3 + i * 0.06 }}
+                className="p-4 rounded-xl border border-card-border bg-card-bg/40 hover:bg-card-bg/70 transition-colors"
               >
-                <div className="text-accent-light mb-3 group-hover:scale-110 transition-transform duration-300">
-                  {item.icon}
-                </div>
-                <h4 className="font-semibold text-sm mb-1">{item.title}</h4>
-                <p className="text-xs text-muted">{item.desc}</p>
+                <div className="text-accent-light mb-3">{item.icon}</div>
+                <h4 className="font-medium text-sm mb-1 text-foreground">
+                  {item.title}
+                </h4>
+                <p className="text-xs text-muted leading-relaxed">
+                  {item.desc}
+                </p>
               </motion.div>
             ))}
           </motion.div>
         </div>
+
+        {/* Tech marquee */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="mt-16 pt-10 border-t border-card-border"
+        >
+          <p className="text-xs font-mono uppercase tracking-[0.25em] text-muted mb-5">
+            Tools I work with
+          </p>
+          <TechMarquee />
+        </motion.div>
       </div>
     </section>
   );
